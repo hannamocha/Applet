@@ -27,6 +27,7 @@ function App() {
       note.isEditing = false;
       return note;
     }))
+
     setNotes(apiData.data.listNotes.items);
   }
 
@@ -38,7 +39,6 @@ function App() {
       formData.image = image;
     }
     fetchNotes();
-    //setNotes([ ...notes, formData ]);
     setFormData(initialFormState);
   }
 
@@ -59,7 +59,7 @@ function App() {
   async function updateNote(note) {
     if (!note.name || !note.description) return;
 
-    //Prepare the list to be saved by GraphQL
+    // Prepare the list to be saved by GraphQL
     notes.map(async e => {
       delete e.isEditing;
       if (e.image) {
@@ -74,7 +74,7 @@ function App() {
   }
 
   function isEditingNote(note) {
-    const objIndex = notes.findIndex((obj => obj.id == note.id));
+    const objIndex = notes.findIndex((obj => obj.id === note.id));
     if (notes[objIndex]) {
       notes[objIndex].isEditing = true;
     }
@@ -83,7 +83,7 @@ function App() {
 
   function EditNote(props) {
     if (props) {
-      const note = notes.find(note => note.id == props.id);
+      const note = notes.find(note => note.id === props.id);
       const newNotesArray = notes.filter(e => e.id !== note.id);
       if (note && note.isEditing) {
         return ([<input key={note.id+"input"}
@@ -129,7 +129,7 @@ function App() {
       <br></br>
       <div style={{marginBottom: 30}}>
         {
-          notes.sort((a, b) => a.id > b.id).map(note => (
+          notes.sort((a, b) => a.id < b.id ? -1 : (a.id > b.id ? 1 : 0)).map(note => (
             <div key={note.id+"parentdiv"}>
               <br key={note.id+"br"}></br>
               <EditNote id={note.id}/>
