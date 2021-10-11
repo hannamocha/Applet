@@ -59,6 +59,15 @@ function App() {
   async function updateNote(note) {
     if (!note.name || !note.description) return;
 
+    const apiData = await API.graphql({ query: listNotes });
+    const oldNotes = apiData.data.listNotes.items;
+    const oldObjIndex =  oldNotes.findIndex((obj => obj.id === note.id));
+
+    if (note.name === oldNotes[oldObjIndex].name) {
+      fetchNotes();
+      return;
+    }
+
     // Prepare the list to be saved by GraphQL
     notes.map(async e => {
       delete e.isEditing;
@@ -71,6 +80,7 @@ function App() {
 
     await API.graphql({ query: updateNoteMutation, variables: { input: note } });
     fetchNotes();
+
   }
 
   function isEditingNote(note) {
